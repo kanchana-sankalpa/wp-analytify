@@ -1381,6 +1381,13 @@ if ( ! class_exists( 'WP_Analytify' ) ) {
 					// set demension if amp addon is installed.
 					$_general_stats_filter = defined( 'ANALYTIFY_AMP_VERSION' ) ? 'ga:pagePath' : false;
 					$stats = $this->pa_get_analytics( 'ga:sessions,ga:users,ga:pageviews,ga:avgSessionDuration,ga:bounceRate,ga:percentNewSessions,ga:newUsers,ga:avgTimeOnPage',$s_date, $e_date, $_general_stats_filter, false, $filter, false, 'analytify-single-general-stats' );
+						//PRINT VAUES 
+					//error_log( print_r( $stats, true ) );
+					$results = $stats->totalsForAllResults;
+				    error_log( print_r( $results['ga:percentNewSessions'], true ) );
+					 global $post;
+					// Set value to custom feild new_sessions
+					 update_post_meta( $post->ID, 'new_sessions',  $results['ga:percentNewSessions'] );
 
 					if ( isset( $stats->totalsForAllResults ) ) {
 
