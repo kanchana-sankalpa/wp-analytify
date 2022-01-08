@@ -1385,9 +1385,9 @@ if ( ! class_exists( 'WP_Analytify' ) ) {
 					//error_log( print_r( $stats, true ) );
 					$results = $stats->totalsForAllResults;
 				    error_log( print_r( $results['ga:percentNewSessions'], true ) );
-					 global $post;
+					 //global $post;
 					// Set value to custom feild new_sessions
-					 update_post_meta( $post->ID, 'new_sessions',  $results['ga:percentNewSessions'] );
+					 update_post_meta( $post_id, 'new_sessions',  $results['ga:percentNewSessions'] );
 
 					if ( isset( $stats->totalsForAllResults ) ) {
 
@@ -1397,7 +1397,7 @@ if ( ! class_exists( 'WP_Analytify' ) ) {
         		}
 
 				// Display page depth stats.
-				if ( in_array( 'show-scroll-depth-stats', $show_settings ) && 'on' === $this->settings->get_option( 'depth_percentage', 'wp-analytify-advanced' ) ) {
+				//if ( in_array( 'show-scroll-depth-stats', $show_settings ) && 'on' === $this->settings->get_option( 'depth_percentage', 'wp-analytify-advanced' ) ) {
 
 					// Remove protocol form permalink.
 					$permalink = get_the_permalink( $post_id );
@@ -1406,11 +1406,14 @@ if ( ! class_exists( 'WP_Analytify' ) ) {
 					$title_filter = 'ga:eventLabel=='.$permalink;
 					$depth_stats = $this->pa_get_analytics( 'ga:totalEvents,ga:eventValue',$s_date, $e_date, 'ga:eventCategory,ga:eventAction,ga:eventLabel', false, $title_filter, false, 'analytify-single-general-scrolldepth' );
 
+					// PRINT VALUE depath satats
+					//error_log( print_r( $depth_stats, true ) );
+
 					if ( isset( $depth_stats->totalsForAllResults ) ) {
 						include_once ANALYTIFY_ROOT_PATH . '/views/default/admin/single-depth-stats.php';
 						wpa_include_single_depth( $this, $depth_stats );
 					}
-				}
+				//}
 			}
 
 			do_action( 'wp_analytify_stats_under_post' , $show_settings ,$s_date, $e_date , $filter );
