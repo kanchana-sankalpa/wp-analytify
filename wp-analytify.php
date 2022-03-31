@@ -1389,6 +1389,24 @@ if ( ! class_exists( 'WP_Analytify' ) ) {
 					// Set value to custom feild new_sessions
 					 update_post_meta( $post_id, 'new_sessions',  $results['ga:percentNewSessions'] );
 
+					 //take the u like count and calcualte the percenage aginst page visiters
+					 global $wpdb;
+					 $loved_result = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT meta_value FROM wp_ulike_meta
+					 WHERE item_id = %d
+					 AND meta_key = %s
+					 LIMIT 1
+					",
+					$post_id,
+					'count_distinct_like'
+				)
+				);
+				$love_percentage =($loved_result/$results['ga:users'])*100;
+
+				 update_post_meta($post_id, 'heart_count_percentage',  $love_percentage );
+				 
+
 					if ( isset( $stats->totalsForAllResults ) ) {
 
 						include_once ANALYTIFY_ROOT_PATH . '/views/default/admin/single-general-stats.php';
@@ -1406,8 +1424,28 @@ if ( ! class_exists( 'WP_Analytify' ) ) {
 					$title_filter = 'ga:eventLabel=='.$permalink;
 					$depth_stats = $this->pa_get_analytics( 'ga:totalEvents,ga:eventValue',$s_date, $e_date, 'ga:eventCategory,ga:eventAction,ga:eventLabel', false, $title_filter, false, 'analytify-single-general-scrolldepth' );
 
-					// PRINT VALUE depath satats
-					//error_log( print_r( $depth_stats, true ) );
+				 // PRINT VALUE --- Add new code-------------------
+				  //error_log( print_r( "depth_stats", true ) );
+				  //error_log( print_r( $depth_stats, true ) );
+				  $scrolDepthTotal = 0;
+				  $scroll_stats = $depth_stats['rows'];
+				  foreach ($scroll_stats as $one_stat) {
+					  if($one_stat[1]==25){
+						  //error_log( print_r( "eqals 25", true ) );
+						  $scrolDepthTotal += (int)$one_stat[3];
+					  }
+					  if($one_stat[1]==50){
+						  //error_log( print_r( "eqals 25", true ) );
+						  $scrolDepthTotal += ((int)$one_stat[3])*2;
+					  }
+					  if($one_stat[1]==75){
+						  //error_log( print_r( "eqals 25", true ) );
+						  $scrolDepthTotal += ((int)$one_stat[3])*3;
+					  }
+				  }
+				//error_log( print_r( $scrolDepthTotal, true ) );
+			   update_post_meta($post_id, 'scroll_depth_score',  $scrolDepthTotal );
+				  //------------------ end of new code --------------------------------------------------------
 
 					if ( isset( $depth_stats->totalsForAllResults ) ) {
 						include_once ANALYTIFY_ROOT_PATH . '/views/default/admin/single-depth-stats.php';
