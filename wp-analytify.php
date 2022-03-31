@@ -1389,22 +1389,6 @@ if ( ! class_exists( 'WP_Analytify' ) ) {
 					// Set value to custom feild new_sessions
 					 update_post_meta( $post_id, 'new_sessions',  $results['ga:percentNewSessions'] );
 					
-					//take the u like count and calcualte the percenage aginst page visiters
-				            global $wpdb;
-						 $loved_result = $wpdb->get_var(
-					$wpdb->prepare(
-					    "SELECT meta_value FROM wp_ulike_meta
-					     WHERE item_id = %d
-					     AND meta_key = %s
-					     LIMIT 1
-					    ",
-					    $post_id,
-					    'count_distinct_like'
-					)
-				    );
-				    $love_percentage =($loved_result/$results['ga:users'])*100;
-    
-					 update_post_meta($post_id, 'heart_count_percentage',  $love_percentage );
 
 					 //take the u like count and calcualte the percenage aginst page visiters
 					 global $wpdb;
